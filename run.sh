@@ -25,6 +25,7 @@ echo "
 ## ==============================================
 [[ -z "$SATISFACTORY_SERVER_UPDATE_ON_START" ]] && SATISFACTORY_SERVER_UPDATE_ON_START=true
 [[ -z "$SATISFACTORY_SERVER_VALIDATE_ON_START" ]] && SATISFACTORY_SERVER_VALIDATE_ON_START=false
+[[ -z "$SATISFACTORY_MAXPLAYERS" ]] && SATISFACTORY_MAXPLAYERS=8
 [[ -z "$STEAMCMD_USER" ]] && STEAMCMD_USER="anonymous"
 [[ -z "$STEAMCMD_PASSWORD" ]] && STEAMCMD_PASSWORD=""
 [[ -z "$STEAMCMD_AUTH_CODE" ]] && STEAMCMD_AUTH_CODE=""
@@ -72,4 +73,7 @@ echo "
 ║ Starting Server                               ║
 ╚═══════════════════════════════════════════════╝"
 
-$GAME_DIR/FactoryServer.sh -unattended
+$GAME_DIR/FactoryServer.sh \
+  -unattended \
+  "-ini:Game:[/Script/Engine.GameSession]:MaxPlayers=$SATISFACTORY_MAXPLAYERS" \
+  "-ini:GameUserSettings:[/Script/Engine.GameSession]:MaxPlayers=$SATISFACTORY_MAXPLAYERS"
