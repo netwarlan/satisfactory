@@ -8,6 +8,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ## Set Build Arguments
 ENV APP_DIR="/app" \
     GAME_DIR="/app/satisfactory" \
+    DATA_DIR="/app/satisfactory_data" \
     GAME_USER="steam" \
     STEAMCMD_APP="1690800" \
     STEAMCMD_USER="anonymous" \
@@ -36,13 +37,15 @@ RUN apt update \
     ## Create Directory Structure
     && mkdir -p $GAME_DIR \
     && mkdir -p $STEAMCMD_DIR \
+    && mkdir -p $DATA_DIR \
 
     ## Create our User
     && useradd -ms /bin/bash $GAME_USER \
 
     ## Set Directory Permissions
     && chown -R $GAME_USER:$GAME_USER $GAME_DIR \
-    && chown -R $GAME_USER:$GAME_USER $STEAMCMD_DIR
+    && chown -R $GAME_USER:$GAME_USER $STEAMCMD_DIR \
+    && chown -R $GAME_USER:$GAME_USER $DATA_DIR
 
 ## Change to our User
 USER $GAME_USER

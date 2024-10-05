@@ -31,7 +31,10 @@ echo "
 [[ -z "$STEAMCMD_AUTH_CODE" ]] && STEAMCMD_AUTH_CODE=""
 
 
-
+# Link the server data directory to the one created in $DATA_DIR
+mkdir -p $DATA_DIR 
+mkdir -p /home/$GAME_USER/.config/Epic/ 
+test -L /home/$GAME_USER/.config/Epic/FactoryGame || ln -s $DATA_DIR /home/$GAME_USER/.config/Epic/FactoryGame 
 
 ## Update on startup
 ## ==============================================
