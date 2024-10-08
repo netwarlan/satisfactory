@@ -1,0 +1,10 @@
+services:
+  game_server:
+    build: .
+    volumes:
+      - ./server-bin:/app/satisfactory
+      - ./server-data:/app/satisfactory_data
+    ports:
+      # Main Game Port, requires tcp and udp                                
+      - "7777:7777/tcp"
+      - "7777:7777/udp"
