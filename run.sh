@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 echo "
 
@@ -23,18 +24,25 @@ echo "
 
 ## Set default values if none were provided
 ## ==============================================
-[[ -z "$SATISFACTORY_SERVER_UPDATE_ON_START" ]] && SATISFACTORY_SERVER_UPDATE_ON_START=true
-[[ -z "$SATISFACTORY_SERVER_VALIDATE_ON_START" ]] && SATISFACTORY_SERVER_VALIDATE_ON_START=false
-[[ -z "$SATISFACTORY_MAXPLAYERS" ]] && SATISFACTORY_MAXPLAYERS=8
-[[ -z "$STEAMCMD_USER" ]] && STEAMCMD_USER="anonymous"
-[[ -z "$STEAMCMD_PASSWORD" ]] && STEAMCMD_PASSWORD=""
-[[ -z "$STEAMCMD_AUTH_CODE" ]] && STEAMCMD_AUTH_CODE=""
+SATISFACTORY_SERVER_UPDATE_ON_START="${SATISFACTORY_SERVER_UPDATE_ON_START:-true}"
+SATISFACTORY_SERVER_VALIDATE_ON_START="${SATISFACTORY_SERVER_VALIDATE_ON_START:-false}"
+SATISFACTORY_MAXPLAYERS="${SATISFACTORY_MAXPLAYERS:-8}"
+STEAMCMD_USER="${STEAMCMD_USER:-anonymous}"
+STEAMCMD_PASSWORD="${STEAMCMD_PASSWORD:-}"
+STEAMCMD_AUTH_CODE="${STEAMCMD_AUTH_CODE:-}"
+
+## Validate numeric inputs
+## ==============================================
+if [[ ! "$SATISFACTORY_MAXPLAYERS" =~ ^[0-9]+$ ]]; then
+  echo "Error: SATISFACTORY_MAXPLAYERS must be a valid number"
+  exit 1
+fi
 
 
 # Link the server data directory to the one created in $DATA_DIR
-mkdir -p $DATA_DIR 
-mkdir -p /home/$GAME_USER/.config/Epic/ 
-test -L /home/$GAME_USER/.config/Epic/FactoryGame || ln -s $DATA_DIR /home/$GAME_USER/.config/Epic/FactoryGame 
+mkdir -p "$DATA_DIR"
+mkdir -p "/home/$GAME_USER/.config/Epic/"
+test -L "/home/$GAME_USER/.config/Epic/FactoryGame" || ln -s "$DATA_DIR" "/home/$GAME_USER/.config/Epic/FactoryGame"
 
 ## Update on startup
 ## ==============================================
@@ -49,10 +57,10 @@ echo "
     VALIDATE_FLAG=''
   fi
 
-  $STEAMCMD_DIR/steamcmd.sh \
-  +force_install_dir $GAME_DIR \
-  +login $STEAMCMD_USER $STEAMCMD_PASSWORD $STEAMCMD_AUTH_CODE \
-  +app_update $STEAMCMD_APP $VALIDATE_FLAG \
+  "$STEAMCMD_DIR/steamcmd.sh" \
+  +force_install_dir "$GAME_DIR" \
+  +login "$STEAMCMD_USER" "$STEAMCMD_PASSWORD" "$STEAMCMD_AUTH_CODE" \
+  +app_update "$STEAMCMD_APP" $VALIDATE_FLAG \
   +quit
 
 fi
@@ -64,7 +72,7 @@ echo "
 ╔═══════════════════════════════════════════════╗
 ║ Server set with provided values               ║
 ╚═══════════════════════════════════════════════╝"
-printenv | grep SATISFACTORY
+printenv | grep SATISFACTORY || true
 
 
 
@@ -76,7 +84,7 @@ echo "
 ║ Starting Server                               ║
 ╚═══════════════════════════════════════════════╝"
 
-$GAME_DIR/FactoryServer.sh \
+"$GAME_DIR/FactoryServer.sh" \
   -unattended \
   "-ini:Game:[/Script/Engine.GameSession]:MaxPlayers=$SATISFACTORY_MAXPLAYERS" \
   "-ini:GameUserSettings:[/Script/Engine.GameSession]:MaxPlayers=$SATISFACTORY_MAXPLAYERS"
