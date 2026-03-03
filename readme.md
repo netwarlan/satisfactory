@@ -1,4 +1,9 @@
 # Satisfactory
+
+[![Build](https://img.shields.io/github/actions/workflow/status/netwarlan/satisfactory/build.yml)](https://github.com/netwarlan/satisfactory/actions)
+[![Release](https://img.shields.io/github/v/release/netwarlan/satisfactory)](https://github.com/netwarlan/satisfactory/releases)
+[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/QtqKW9xvzK)
+
 The following repository contains the source files for building a Satisfactory server.
 
 ## Configuring the server
