@@ -10,9 +10,15 @@ The following repository contains the source files for building a Satisfactory s
 
 This dedicated server is largely configured by the admin UI in the game client. The first person to connect to a fresh dedicated server will set the admin password and be able to start a new map. The server configuration along with world save data has been configured to be available at `/app/satisfactory_data`. It's recommended that you configure a volume at that path so that progress is not lost when the container is recreated.
 
-### Max Players
+### Environment Variables
 
-The devs of this game suggest that it is only tested with 4 players. However, it is configurable to go beyond this default. You can set the `SATISFACTORY_MAXPLAYERS` envvar to an integer value.
+| Variable | Default | Description |
+|---|---|---|
+| `SATISFACTORY_SERVER_UPDATE_ON_START` | `true` | Download/update game files on container start |
+| `SATISFACTORY_SERVER_VALIDATE_ON_START` | `false` | Validate game file integrity via SteamCMD on start |
+| `SATISFACTORY_SERVER_UPDATE_ONLY_THEN_STOP` | `false` | Download game files only, then stop the container |
+| `SATISFACTORY_SERVER_VALIDATE_ONLY_THEN_STOP` | `false` | Download and validate game files, then stop the container |
+| `SATISFACTORY_MAXPLAYERS` | `8` | Max player count (devs recommend 4) |
 
 
 ### Running
@@ -23,5 +29,22 @@ docker run -d \
     -p 7777:7777/tcp \
     -v ./server-data:/app/satisfactory_data \
     -v ./server-bin:/app/satisfactory \
+    ghcr.io/netwarlan/satisfactory:latest
+```
+
+### Download game files only
+To download game files without starting the server:
+```
+docker run --rm \
+    -v ./server-bin:/app/satisfactory \
+    -e SATISFACTORY_SERVER_UPDATE_ONLY_THEN_STOP=true \
+    ghcr.io/netwarlan/satisfactory:latest
+```
+
+To download and validate game files:
+```
+docker run --rm \
+    -v ./server-bin:/app/satisfactory \
+    -e SATISFACTORY_SERVER_VALIDATE_ONLY_THEN_STOP=true \
     ghcr.io/netwarlan/satisfactory:latest
 ```
